@@ -33,15 +33,26 @@ jobs:
         cd lumen-api
         composer install
         
-    - name: Copy environment file
+    - name: Configure environment
       run: |
         cd lumen-api
         cp .env.example .env
+        sed -i 's/DB_HOST=127.0.0.1/DB_HOST=127.0.0.1/' .env
+        sed -i 's/DB_DATABASE=energex_db/DB_DATABASE=energex_db/' .env
+        sed -i 's/DB_USERNAME=root/DB_USERNAME=root/' .env
+        sed -i 's/DB_PASSWORD=/DB_PASSWORD=password/' .env
+        echo "APP_KEY=$(openssl rand -base64 32)" >> .env
+        echo "JWT_SECRET=$(openssl rand -base64 32)" >> .env
         
     - name: Run tests
       run: |
         cd lumen-api
         vendor/bin/phpunit
+      env:
+        DB_HOST: 127.0.0.1
+        DB_DATABASE: energex_db
+        DB_USERNAME: root
+        DB_PASSWORD: password
 
   test-nodejs:
     runs-on: ubuntu-latest
