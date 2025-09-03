@@ -4,24 +4,25 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class PostController extends Controller
 {
     /**
-     * Require authentication for all post operations
-     * Why: Only logged-in users should manage posts
+     * Get all posts (with caching and manual auth check)
      */
-    public function __construct()
+    public function index(Request $request)
     {
-        $this->middleware('auth');
-    }
+        // Manual auth check
+        try {
+            if (!$user = JWTAuth::parseToken()->authenticate()) {
+                return response()->json(['error' => 'User not found'], 404);
+            }
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Token invalid or missing'], 401);
+        }
 
-    /**
-     * Get all posts (with caching)
-     * Why: Users want to see all posts, and caching makes it fast
-     */
-    public function index()
-    {
         $cacheKey = 'posts:all';
         
         // Step 1: Check if posts are cached in Redis
@@ -33,7 +34,7 @@ class PostController extends Controller
         }
 
         // Step 2: If not cached, get from database
-        $posts = Post::with('user')->get(); // 'with' loads user data too
+        $posts = Post::with('user')->get();
         
         // Step 3: Cache the results for 5 minutes (300 seconds)
         Redis::setex($cacheKey, 300, json_encode($posts));
@@ -43,21 +44,29 @@ class PostController extends Controller
 
     /**
      * Create a new post
-     * Why: Users need to be able to create content
      */
     public function store(Request $request)
     {
+        // Manual auth check
+        try {
+            if (!$user = JWTAuth::parseToken()->authenticate()) {
+                return response()->json(['error' => 'User not found'], 404);
+            }
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Token invalid or missing'], 401);
+        }
+
         // Step 1: Validate the incoming data
         $this->validate($request, [
             'title' => 'required|string|max:255',
             'content' => 'required|string',
         ]);
 
-        // Step 2: Create the post with current user's ID
+        // Step 2: Create the post with authenticated user's ID
         $post = Post::create([
             'title' => $request->title,
             'content' => $request->content,
-            'user_id' => auth()->id(), // Get the logged-in user's ID
+            'user_id' => $user->id,
         ]);
 
         // Step 3: Clear the cache since we have new data
@@ -69,10 +78,18 @@ class PostController extends Controller
 
     /**
      * Get a single post (with caching)
-     * Why: Users want to view individual posts in detail
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
+        // Manual auth check
+        try {
+            if (!$user = JWTAuth::parseToken()->authenticate()) {
+                return response()->json(['error' => 'User not found'], 404);
+            }
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Token invalid or missing'], 401);
+        }
+
         $cacheKey = "posts:{$id}";
         
         // Step 1: Check cache first

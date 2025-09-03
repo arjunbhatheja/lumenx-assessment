@@ -12,7 +12,10 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
-
+// Handle preflight OPTIONS requests
+$router->options('{route:.*}', function () {
+    return response('', 200);
+});
 // Basic health check route
 $router->get('/', function () use ($router) {
     return response()->json([
