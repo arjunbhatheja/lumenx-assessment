@@ -13,6 +13,31 @@
 |
 */
 
+// Basic health check route
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    return response()->json([
+        'message' => 'EnergeX API is running!',
+        'version' => $router->app->version()
+    ]);
+});
+
+// API Routes Group
+$router->group(['prefix' => 'api'], function () use ($router) {
+    
+    // Authentication Routes (No auth required)
+    // POST /api/register - Register a new user
+    $router->post('register', 'AuthController@register');
+    
+    // POST /api/login - Login existing user
+    $router->post('login', 'AuthController@login');
+    
+    // Post Routes (Auth required - handled by PostController constructor)
+    // GET /api/posts - Get all posts (cached)
+    $router->get('posts', 'PostController@index');
+    
+    // POST /api/posts - Create new post
+    $router->post('posts', 'PostController@store');
+    
+    // GET /api/posts/123 - Get single post by ID (cached)
+    $router->get('posts/{id}', 'PostController@show');
 });
