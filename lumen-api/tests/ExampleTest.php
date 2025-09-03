@@ -1,23 +1,17 @@
 <?php
 
-namespace Tests;
+use Laravel\Lumen\Testing\TestCase as BaseTestCase;
 
-use Laravel\Lumen\Testing\DatabaseMigrations;
-use Laravel\Lumen\Testing\DatabaseTransactions;
-
-class ExampleTest extends TestCase
+class ExampleTest extends BaseTestCase
 {
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
+    public function createApplication()
+    {
+        return require __DIR__.'/../bootstrap/app.php';
+    }
+
     public function test_that_base_endpoint_returns_a_successful_response()
     {
         $this->get('/');
-
-        $this->assertEquals(
-            $this->app->version(), $this->response->getContent()
-        );
+        $this->seeJson(['message' => 'EnergeX API is running!']);
     }
 }
