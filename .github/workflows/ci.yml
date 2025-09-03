@@ -25,13 +25,18 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.2'  # Changed from '8.1' to '8.2'
+        php-version: '8.2'
         extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql
         
     - name: Install dependencies
       run: |
         cd lumen-api
         composer install
+        
+    - name: Copy environment file
+      run: |
+        cd lumen-api
+        cp .env.example .env
         
     - name: Run tests
       run: |
@@ -56,3 +61,16 @@ jobs:
         
     - name: Run tests
       run: |
+        cd nodejs-cache
+        npm test
+
+  build:
+    needs: [test-lumen, test-nodejs]
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Build Docker images
+      run: |
+        docker-compose build
