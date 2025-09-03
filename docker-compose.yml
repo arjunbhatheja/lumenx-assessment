@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: Energex-Arjun@2003
+      MYSQL_DATABASE: energex_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  lumen:
+    build:
+      context: ./lumen-api
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      - DB_HOST=mysql
+      - DB_PASSWORD=Energex-Arjun@2003
+      - REDIS_HOST=redis
+
+  nodejs:
+    build:
+      context: ./nodejs-cache
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_PASSWORD=Energex-Arjun@2003
+      - REDIS_HOST=redis
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - lumen
+      - nodejs
+
+volumes:
+  mysql_data:
+  
