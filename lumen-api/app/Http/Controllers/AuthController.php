@@ -5,6 +5,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
@@ -19,13 +20,15 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
+            'role' => 'sometimes|string|in:user,admin' 
         ]);
 
         // Step 2: Create the user in database
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password), // Hash the password for security
+            'password' => Hash::make($request->password),
+            'role' => $request->role ?? 'user'
         ]);
 
         // Step 3: Generate a JWT token for immediate login
@@ -39,6 +42,18 @@ class AuthController extends Controller
         ], 201);
     }
 
+    public function me()
+    {
+        try {
+            if (!$user = JWTAuth::parseToken()->authenticate()) {
+                return response()->json(['error' => 'User not found'], 404);
+            }
+            
+            return response()->json($user);
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Token invalid'], 401);
+        }
+    }
     /**
      * Login existing user
      * Why: Users need to authenticate to access protected routes

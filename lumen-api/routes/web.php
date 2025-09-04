@@ -26,21 +26,24 @@ $router->get('/', function () use ($router) {
 
 // API Routes Group
 $router->group(['prefix' => 'api'], function () use ($router) {
-    
-    // Authentication Routes (No auth required)
-    // POST /api/register - Register a new user
+    // Public routes
     $router->post('register', 'AuthController@register');
-    
-    // POST /api/login - Login existing user
     $router->post('login', 'AuthController@login');
     
-    // Post Routes (Auth required - handled by PostController constructor)
-    // GET /api/posts - Get all posts (cached)
-    $router->get('posts', 'PostController@index');
+    // User routes (any authenticated user)
+    $router->group(['middleware' => 'auth'], function () use ($router) {
+        $router->get('posts', 'PostController@index');
+        $router->get('posts/{id}', 'PostController@show');
+        $router->post('posts', 'PostController@store');
+        // Get current user profile
+        $router->get('profile', 'AuthController@me');
+    });
     
-    // POST /api/posts - Create new post
-    $router->post('posts', 'PostController@store');
-    
-    // GET /api/posts/123 - Get single post by ID (cached)
-    $router->get('posts/{id}', 'PostController@show');
+    // Admin only routes
+    $router->group(['middleware' => ['auth', 'role:admin']], function () use ($router) {
+        $router->put('posts/{id}', 'PostController@update');
+        $router->delete('posts/{id}', 'PostController@destroy');
+        $router->get('admin/users', 'AdminController@users');
+        $router->get('admin/stats', 'AdminController@stats');
+    });
 });

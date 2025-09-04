@@ -95,12 +95,14 @@ $app->middleware([
 | totally optional, so you are not required to uncomment this line.
 |
 */
-$app->routeMiddleware([
-    'auth' => App\Http\Middleware\Authenticate::class,
-]);
 $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(Illuminate\Redis\RedisServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+
+$app->routeMiddleware([
+    'auth' => App\Http\Middleware\Authenticate::class,
+    'role' => App\Http\Middleware\RoleMiddleware::class,
+]);
 // if ($app->environment() !== 'production') {
 //     $app->register(Laravel\Tinker\TinkerServiceProvider::class);
 // }

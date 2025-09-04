@@ -113,4 +113,55 @@ class PostController extends Controller
 
         return response()->json($post);
     }
+
+    /**
+     * Update a post (Admin only)
+     */
+    public function update(Request $request, $id)
+    {
+        try {
+            if (!$user = JWTAuth::parseToken()->authenticate()) {
+                return response()->json(['error' => 'User not found'], 404);
+            }
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Token invalid or missing'], 401);
+        }
+
+        $this->validate($request, [
+            'title' => 'sometimes|required|string|max:255',
+            'content' => 'sometimes|required|string',
+        ]);
+
+        $post = Post::findOrFail($id);
+        $post->update($request->all());
+
+        // Clear cache
+        Cache::forget('posts:all');
+        Cache::forget("posts:{$id}");
+
+        return response()->json($post->load('user'));
+    }
+
+    /**
+     * Delete a post (Admin only)
+     */
+    public function destroy($id)
+    {
+        try {
+            if (!$user = JWTAuth::parseToken()->authenticate()) {
+                return response()->json(['error' => 'User not found'], 404);
+            }
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Token invalid or missing'], 401);
+        }
+
+        $post = Post::findOrFail($id);
+        $post->delete();
+
+        // Clear cache
+        Cache::forget('posts:all');
+        Cache::forget("posts:{$id}");
+
+        return response()->json(['message' => 'Post deleted successfully']);
+    }
 }
