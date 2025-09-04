@@ -101,9 +101,9 @@ $app->routeMiddleware([
 $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(Illuminate\Redis\RedisServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
-if ($app->environment() !== 'production') {
-    $app->register(Laravel\Tinker\TinkerServiceProvider::class);
-}
+// if ($app->environment() !== 'production') {
+//     $app->register(Laravel\Tinker\TinkerServiceProvider::class);
+// }
 
 /*
 |--------------------------------------------------------------------------
