@@ -3,7 +3,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redis;
+// use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Cache;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
@@ -26,7 +27,8 @@ class PostController extends Controller
         $cacheKey = 'posts:all';
         
         // Step 1: Check if posts are cached in Redis
-        $cachedPosts = Redis::get($cacheKey);
+        // $cachedPosts = Redis::get($cacheKey);
+            $cachedPosts = Cache::get($cacheKey);
 
         if ($cachedPosts) {
             // Return cached data if available (faster!)
@@ -37,7 +39,8 @@ class PostController extends Controller
         $posts = Post::with('user')->get();
         
         // Step 3: Cache the results for 5 minutes (300 seconds)
-        Redis::setex($cacheKey, 300, json_encode($posts));
+        // Redis::setex($cacheKey, 300, json_encode($posts));
+        Cache::put($cacheKey, $posts, 300);
 
         return response()->json($posts);
     }
@@ -70,7 +73,8 @@ class PostController extends Controller
         ]);
 
         // Step 3: Clear the cache since we have new data
-        Redis::del('posts:all');
+        // Redis::del('posts:all');
+        Cache::forget('posts:all');
 
         // Step 4: Return the created post with user info
         return response()->json($post->load('user'), 201);
@@ -93,7 +97,8 @@ class PostController extends Controller
         $cacheKey = "posts:{$id}";
         
         // Step 1: Check cache first
-        $cachedPost = Redis::get($cacheKey);
+        // $cachedPost = Redis::get($cacheKey);
+        $cachedPost = Cache::get($cacheKey);
 
         if ($cachedPost) {
             return response()->json(json_decode($cachedPost, true));
@@ -103,7 +108,8 @@ class PostController extends Controller
         $post = Post::with('user')->findOrFail($id);
         
         // Step 3: Cache it for next time
-        Redis::setex($cacheKey, 300, json_encode($post));
+        // Redis::setex($cacheKey, 300, json_encode($post));
+        Cache::put($cacheKey, $post, 300);
 
         return response()->json($post);
     }
