@@ -7,16 +7,16 @@
 A production-ready **microservices application** demonstrating modern full-stack development with **React frontend**, **Lumen PHP API**, **Node.js caching layer**, and **real-time WebSocket features**.
 
 ## 📋 Table of Contents
-- [🚀 Quick Demo](#-quick-demo)
-- [🔐 Test Credentials](#-test-credentials)  
-- [🏗️ Architecture Overview](#️-architecture-overview)
-- [✨ Assessment Coverage](#-assessment-coverage)
-- [🧪 Testing Guide](#-testing-guide)
-- [📡 API Documentation](#-api-documentation)
-- [⚡ Real-time Features](#-real-time-features)
-- [🛠️ Technical Stack](#️-technical-stack)
-- [� Deployment Options](#-deployment-options)
-- [�📧 Contact](#-contact)
+- [Quick Demo](#-quick-demo)
+- [Test Credentials](#-test-credentials)  
+- [Architecture Overview](#️-architecture-overview)
+- [Assessment Coverage](#-assessment-coverage)
+- [Testing Guide](#-testing-guide)
+- [API Documentation](#-api-documentation)
+- [Real-time Features](#-real-time-features)
+- [Technical Stack](#️-technical-stack)
+- [Deployment Options](#-deployment-options)
+- [Contact](#-contact)
 
 ---
 
