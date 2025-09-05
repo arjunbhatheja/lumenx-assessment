@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   frontend:
-    image: arbhathe/lumenx-assessment-arjun:frontend-v1.0
+    image: arbhathe/lumenx-assessment-arjun:frontend-v2.0
     ports:
       - "3000:80"
     depends_on:
@@ -11,7 +11,7 @@ services:
       - lumenx-network
 
   backend:
-    image: arbhathe/lumenx-assessment-arjun:backend-v1.0
+    image: arbhathe/lumenx-assessment-arjun:backend-v2.0
     ports:
       - "8000:8000"
     environment:
@@ -30,7 +30,7 @@ services:
       - lumenx-network
 
   cache:
-    image: arbhathe/lumenx-assessment-arjun:cache-v1.0
+    image: arbhathe/lumenx-assessment-arjun:cache-v2.0
     ports:
       - "3001:3000"
     environment:
@@ -41,7 +41,7 @@ services:
       - lumenx-network
 
   websocket:
-    image: arbhathe/lumenx-assessment-arjun:websocket-v1.0
+    image: arbhathe/lumenx-assessment-arjun:websocket-v2.0
     ports:
       - "8080:8080"
     environment:

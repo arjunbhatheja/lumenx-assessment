@@ -1,22 +1,43 @@
 # LumenX Full-Stack Assessment
 
-A complete microservices application with Lumen PHP API, Node.js caching layer, React frontend, and real-time WebSocket features.
+A complete microservices application showcasing modern full-stack development with **React frontend**, **Lumen PHP API**, **Node.js caching**, and **real-time WebSocket features**.
 
-## 🐳 Quick Start with Docker Hub
+## 🚀 Quick Demo (2-Minute Setup)
 
-**One-command deployment using pre-built images:**
+**Clone and run the complete application:**
 
 ```bash
-# Download the production configuration
+git clone https://github.com/arjunbhatheja/lumenx-assessment.git
+cd lumenx-assessment
+docker-compose up -d
+
+# Wait 30 seconds for database setup, then visit:
+# 🌐 Frontend: http://localhost:3000
+# 📡 API: http://localhost:8000
+```
+
+## � Ready-to-Use Test Accounts
+
+**The application comes with pre-configured accounts - no setup needed:**
+
+| Role | Email | Password | Access Level |
+|------|-------|----------|--------------|
+| **Admin** | `admin@lumenx.com` | `admin123` | Full access + Admin dashboard |
+| **User** | `user@lumenx.com` | `user123` | Standard user features |
+
+**Plus 4 additional demo users** with sample posts for a realistic experience.
+
+## 🐳 Alternative: Production Images from Docker Hub
+
+```bash
+# Option 1: Clone and run (recommended - includes source code)
+git clone https://github.com/arjunbhatheja/lumenx-assessment.git
+cd lumenx-assessment
+docker-compose up -d
+
+# Option 2: Use pre-built images from Docker Hub
 curl -O https://raw.githubusercontent.com/arjunbhatheja/lumenx-assessment/main/docker-compose.prod.yml
-
-# Start all services
 docker-compose -f docker-compose.prod.yml up -d
-
-# Access the application
-# Frontend: http://localhost:3000
-# API: http://localhost:8000  
-# WebSocket: http://localhost:8080
 ```
 
 **Docker Hub Repository:** [arbhathe/lumenx-assessment-arjun](https://hub.docker.com/r/arbhathe/lumenx-assessment-arjun)
@@ -70,24 +91,37 @@ docker-compose -f docker-compose.prod.yml up -d
 
 2. **Local Deployment** (2-minute setup)
    ```bash
-   # One-command deployment using Docker Hub:
-   curl -s https://raw.githubusercontent.com/arjunbhatheja/lumenx-assessment/main/quick-start.sh | bash
+   # Clone and start with Docker:
+   git clone https://github.com/arjunbhatheja/lumenx-assessment.git
+   cd lumenx-assessment
+   docker-compose up -d
+   
+   # Or use production images:
+   docker-compose -f docker-compose.prod.yml up -d
    
    # Access:
    # Frontend: http://localhost:3000
    # API: http://localhost:8000
    ```
 
-3. **Create Test Users:**
-   ```bash
-   # Admin user
-   curl -X POST http://localhost:8000/register -H "Content-Type: application/json" \
-     -d '{"name":"Admin","email":"admin@test.com","password":"admin123","role":"admin"}'
-   
-   # Regular user  
-   curl -X POST http://localhost:8000/register -H "Content-Type: application/json" \
-     -d '{"name":"User","email":"user@test.com","password":"user123"}'
+3. **Pre-configured Test Users:**
    ```
+   Admin User:
+   Email: admin@lumenx.com
+   Password: admin123
+   
+   Regular User:
+   Email: user@lumenx.com  
+   Password: user123
+   ```
+
+### **What You Can Test:**
+- ✅ **User Registration & Login** with JWT authentication
+- ✅ **Admin Dashboard** with user management and statistics  
+- ✅ **Real-time Post Updates** using WebSocket (open multiple tabs)
+- ✅ **Role-based Permissions** (admin vs user capabilities)
+- ✅ **Redis Caching** for optimized performance
+- ✅ **Material-UI Components** with dark/light theme toggle
 
 ## 🛠️ Tech Stack
 
