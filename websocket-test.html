@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test - LumenX Assessment</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 4px; }
+        .connected { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .disconnected { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .logs { height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; background: #f8f9fa; }
+        button { margin: 5px; padding: 8px 16px; }
+        input { margin: 5px; padding: 8px; width: 200px; }
+    </style>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+</head>
+<body>
+    <h1>🚀 WebSocket Connection Test</h1>
+    
+    <div id="connectionStatus" class="status disconnected">
+        ❌ Not Connected
+    </div>
+
+    <div>
+        <h3>🔧 Controls</h3>
+        <button onclick="connect()">Connect</button>
+        <button onclick="disconnect()">Disconnect</button>
+        <button onclick="clearLogs()">Clear Logs</button>
+    </div>
+
+    <div>
+        <h3>📡 Test Events</h3>
+        <input type="text" id="postTitle" placeholder="Post Title" value="Test WebSocket Post">
+        <input type="text" id="postContent" placeholder="Post Content" value="This is a test post created via WebSocket">
+        <button onclick="emitPostCreated()">Emit Post Created</button>
+        <br>
+        <input type="text" id="postId" placeholder="Post ID" value="1">
+        <button onclick="emitPostUpdated()">Emit Post Updated</button>
+        <button onclick="emitPostDeleted()">Emit Post Deleted</button>
+        <br>
+        <input type="text" id="userId" placeholder="User ID" value="1">
+        <select id="userRole">
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+        </select>
+        <button onclick="joinRooms()">Join Rooms</button>
+    </div>
+
+    <div>
+        <h3>📋 Event Logs</h3>
+        <div id="logs" class="logs"></div>
+    </div>
+
+    <script>
+        let socket = null;
+
+        function log(message) {
+            const logs = document.getElementById('logs');
+            const time = new Date().toLocaleTimeString();
+            logs.innerHTML += `<div><strong>[${time}]</strong> ${message}</div>`;
+            logs.scrollTop = logs.scrollHeight;
+        }
+
+        function updateStatus(connected) {
+            const status = document.getElementById('connectionStatus');
+            if (connected) {
+                status.className = 'status connected';
+                status.innerHTML = '✅ Connected to WebSocket Server';
+            } else {
+                status.className = 'status disconnected';
+                status.innerHTML = '❌ Not Connected';
+            }
+        }
+
+        function connect() {
+            if (socket && socket.connected) {
+                log('Already connected!');
+                return;
+            }
+
+            socket = io('http://localhost:3001', {
+                transports: ['websocket'],
+                autoConnect: true
+            });
+
+            socket.on('connect', () => {
+                log('🟢 Connected to WebSocket server');
+                updateStatus(true);
+            });
+
+            socket.on('disconnect', () => {
+                log('🔴 Disconnected from WebSocket server');
+                updateStatus(false);
+            });
+
+            socket.on('connect_error', (error) => {
+                log(`❌ Connection error: ${error.message}`);
+                updateStatus(false);
+            });
+
+            // Post events
+            socket.on('post:new', (data) => {
+                log(`📝 New post received: "${data.title}" by ${data.user?.name || 'Unknown'}`);
+            });
+
+            socket.on('post:updated', (data) => {
+                log(`✏️ Post updated: "${data.title}" (ID: ${data.id})`);
+            });
+
+            socket.on('post:deleted', (data) => {
+                log(`🗑️ Post deleted: ID ${data.id}`);
+            });
+
+            // Admin events
+            socket.on('admin:notification', (data) => {
+                log(`👑 Admin notification: ${data.message}`);
+            });
+
+            socket.on('user:activity', (data) => {
+                log(`👤 User activity: ${data.action} by user ${data.userId}`);
+            });
+        }
+
+        function disconnect() {
+            if (socket) {
+                socket.disconnect();
+                socket = null;
+                log('🔌 Disconnected manually');
+                updateStatus(false);
+            }
+        }
+
+        function joinRooms() {
+            if (!socket || !socket.connected) {
+                log('❌ Not connected! Connect first.');
+                return;
+            }
+
+            const userId = document.getElementById('userId').value;
+            const role = document.getElementById('userRole').value;
+
+            socket.emit('join', { userId: parseInt(userId), role: role });
+            log(`🏠 Joined rooms for user ${userId} with role ${role}`);
+        }
+
+        function emitPostCreated() {
+            if (!socket || !socket.connected) {
+                log('❌ Not connected! Connect first.');
+                return;
+            }
+
+            const title = document.getElementById('postTitle').value;
+            const content = document.getElementById('postContent').value;
+            
+            const postData = {
+                id: Date.now(),
+                title: title,
+                content: content,
+                user: { id: 1, name: 'Test User' },
+                created_at: new Date().toISOString()
+            };
+
+            socket.emit('post:created', postData);
+            log(`📤 Emitted post creation: "${title}"`);
+        }
+
+        function emitPostUpdated() {
+            if (!socket || !socket.connected) {
+                log('❌ Not connected! Connect first.');
+                return;
+            }
+
+            const postId = document.getElementById('postId').value;
+            const title = document.getElementById('postTitle').value;
+            const content = document.getElementById('postContent').value;
+            
+            const postData = {
+                id: parseInt(postId),
+                title: title + ' (Updated)',
+                content: content + ' - Updated via WebSocket',
+                user: { id: 1, name: 'Test User' },
+                updated_at: new Date().toISOString()
+            };
+
+            socket.emit('post:updated', postData);
+            log(`📤 Emitted post update: ID ${postId}`);
+        }
+
+        function emitPostDeleted() {
+            if (!socket || !socket.connected) {
+                log('❌ Not connected! Connect first.');
+                return;
+            }
+
+            const postId = document.getElementById('postId').value;
+            socket.emit('post:deleted', parseInt(postId));
+            log(`📤 Emitted post deletion: ID ${postId}`);
+        }
+
+        function clearLogs() {
+            document.getElementById('logs').innerHTML = '';
+            log('Logs cleared');
+        }
+
+        // Auto-connect on page load
+        window.onload = function() {
+            log('🎯 WebSocket test page loaded');
+            log('🔗 WebSocket server: http://localhost:3001');
+            log('Click "Connect" to establish WebSocket connection');
+        };
+    </script>
+</body>
+</html>
