@@ -1,0 +1,83 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: arbhathe/lumenx-assessment-arjun:frontend-v1.0
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - lumenx-network
+
+  backend:
+    image: arbhathe/lumenx-assessment-arjun:backend-v1.0
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - DB_HOST=mysql
+      - DB_DATABASE=lumenx
+      - DB_USERNAME=lumenx
+      - DB_PASSWORD=lumenx_secure_password
+      - REDIS_HOST=redis
+      - JWT_SECRET=your-production-jwt-secret-change-this
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - lumenx-network
+
+  cache:
+    image: arbhathe/lumenx-assessment-arjun:cache-v1.0
+    ports:
+      - "3001:3000"
+    environment:
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+    networks:
+      - lumenx-network
+
+  websocket:
+    image: arbhathe/lumenx-assessment-arjun:websocket-v1.0
+    ports:
+      - "8080:8080"
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+    networks:
+      - lumenx-network
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: lumenx
+      MYSQL_USER: lumenx
+      MYSQL_PASSWORD: lumenx_secure_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - lumenx-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - lumenx-network
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  lumenx-network:
+    driver: bridge
