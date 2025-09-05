@@ -3,19 +3,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
-// use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Cache;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 class PostController extends Controller
 {
-    /**
-     * Get all posts (with caching and manual auth check)
-     */
     public function index(Request $request)
     {
-        // Manual auth check
         try {
             if (!$user = JWTAuth::parseToken()->authenticate()) {
                 return response()->json(['error' => 'User not found'], 404);
@@ -25,32 +21,20 @@ class PostController extends Controller
         }
 
         $cacheKey = 'posts:all';
-        
-        // Step 1: Check if posts are cached in Redis
-        // $cachedPosts = Redis::get($cacheKey);
-            $cachedPosts = Cache::get($cacheKey);
+        $cachedPosts = Cache::get($cacheKey);
 
         if ($cachedPosts) {
-            // Return cached data if available (faster!)
             return response()->json(json_decode($cachedPosts, true));
         }
 
-        // Step 2: If not cached, get from database
         $posts = Post::with('user')->get();
-        
-        // Step 3: Cache the results for 5 minutes (300 seconds)
-        // Redis::setex($cacheKey, 300, json_encode($posts));
         Cache::put($cacheKey, $posts, 300);
 
         return response()->json($posts);
     }
 
-    /**
-     * Create a new post
-     */
     public function store(Request $request)
     {
-        // Manual auth check
         try {
             if (!$user = JWTAuth::parseToken()->authenticate()) {
                 return response()->json(['error' => 'User not found'], 404);
@@ -59,33 +43,30 @@ class PostController extends Controller
             return response()->json(['error' => 'Token invalid or missing'], 401);
         }
 
-        // Step 1: Validate the incoming data
         $this->validate($request, [
             'title' => 'required|string|max:255',
             'content' => 'required|string',
         ]);
 
-        // Step 2: Create the post with authenticated user's ID
         $post = Post::create([
             'title' => $request->title,
             'content' => $request->content,
             'user_id' => $user->id,
         ]);
 
-        // Step 3: Clear the cache since we have new data
-        // Redis::del('posts:all');
         Cache::forget('posts:all');
 
-        // Step 4: Return the created post with user info
+        try {
+            Redis::publish('post:created', json_encode($post->load('user')));
+        } catch (\Exception $e) {
+            error_log('Failed to publish WebSocket event: ' . $e->getMessage());
+        }
+
         return response()->json($post->load('user'), 201);
     }
 
-    /**
-     * Get a single post (with caching)
-     */
     public function show($id, Request $request)
     {
-        // Manual auth check
         try {
             if (!$user = JWTAuth::parseToken()->authenticate()) {
                 return response()->json(['error' => 'User not found'], 404);
@@ -95,20 +76,13 @@ class PostController extends Controller
         }
 
         $cacheKey = "posts:{$id}";
-        
-        // Step 1: Check cache first
-        // $cachedPost = Redis::get($cacheKey);
         $cachedPost = Cache::get($cacheKey);
 
         if ($cachedPost) {
             return response()->json(json_decode($cachedPost, true));
         }
 
-        // Step 2: Get from database if not cached
         $post = Post::with('user')->findOrFail($id);
-        
-        // Step 3: Cache it for next time
-        // Redis::setex($cacheKey, 300, json_encode($post));
         Cache::put($cacheKey, $post, 300);
 
         return response()->json($post);
@@ -139,6 +113,13 @@ class PostController extends Controller
         Cache::forget('posts:all');
         Cache::forget("posts:{$id}");
 
+        // Publish WebSocket event for real-time updates
+        try {
+            Redis::publish('post:updated', json_encode($post->load('user')));
+        } catch (\Exception $e) {
+            error_log('Failed to publish WebSocket event: ' . $e->getMessage());
+        }
+
         return response()->json($post->load('user'));
     }
 
@@ -156,11 +137,19 @@ class PostController extends Controller
         }
 
         $post = Post::findOrFail($id);
+        $postId = $post->id;
         $post->delete();
 
         // Clear cache
         Cache::forget('posts:all');
         Cache::forget("posts:{$id}");
+
+        // Publish WebSocket event for real-time updates
+        try {
+            Redis::publish('post:deleted', json_encode(['id' => $postId]));
+        } catch (\Exception $e) {
+            error_log('Failed to publish WebSocket event: ' . $e->getMessage());
+        }
 
         return response()->json(['message' => 'Post deleted successfully']);
     }

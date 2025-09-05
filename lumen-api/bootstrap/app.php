@@ -76,10 +76,6 @@ $app->configure('cache');
 |
 */
 
-// $app->middleware([
-//     App\Http\Middleware\ExampleMiddleware::class
-// ]);
-
 $app->middleware([
     App\Http\Middleware\CorsMiddleware::class
 ]);
@@ -103,9 +99,6 @@ $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
     'role' => App\Http\Middleware\RoleMiddleware::class,
 ]);
-// if ($app->environment() !== 'production') {
-//     $app->register(Laravel\Tinker\TinkerServiceProvider::class);
-// }
 
 /*
 |--------------------------------------------------------------------------

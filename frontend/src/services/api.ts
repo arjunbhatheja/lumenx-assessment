@@ -33,6 +33,14 @@ export const postsAPI = {
   getAllPosts: () => lumenAPI.get('/posts'),
   createPost: (postData: any) => lumenAPI.post('/posts', postData),
   getPost: (id: string) => lumenAPI.get(`/posts/${id}`),
+  updatePost: (id: string, postData: any) => lumenAPI.put(`/posts/${id}`, postData),
+  deletePost: (id: string) => lumenAPI.delete(`/posts/${id}`),
+};
+
+// Admin API (using Lumen for admin operations)
+export const adminAPI = {
+  getAllUsers: () => lumenAPI.get('/admin/users'),
+  getStats: () => lumenAPI.get('/admin/stats'),
 };
 
 // Cache API (using Node.js cache service)
