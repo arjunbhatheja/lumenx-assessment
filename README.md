@@ -59,6 +59,36 @@ docker-compose -f docker-compose.prod.yml up -d
 - ⚡ **Optimized Redis** - Memory limits, LRU eviction, persistence
 - 📊 **Advanced Features** - Health checks, activity tracking, pub/sub
 
+## 🧪 Testing & Demo
+
+### **Live Testing Options:**
+
+1. **SwaggerHub API Documentation** (No setup required)
+   - 🔗 **[Interactive API Docs](https://app.swaggerhub.com/apis/arjun/lumenx-assessment-api/1.0.0)**
+   - Click "Try it out" on any endpoint
+   - Test authentication, posts, admin features
+
+2. **Local Deployment** (2-minute setup)
+   ```bash
+   # One-command deployment using Docker Hub:
+   curl -s https://raw.githubusercontent.com/arjunbhatheja/lumenx-assessment/main/quick-start.sh | bash
+   
+   # Access:
+   # Frontend: http://localhost:3000
+   # API: http://localhost:8000
+   ```
+
+3. **Create Test Users:**
+   ```bash
+   # Admin user
+   curl -X POST http://localhost:8000/register -H "Content-Type: application/json" \
+     -d '{"name":"Admin","email":"admin@test.com","password":"admin123","role":"admin"}'
+   
+   # Regular user  
+   curl -X POST http://localhost:8000/register -H "Content-Type: application/json" \
+     -d '{"name":"User","email":"user@test.com","password":"user123"}'
+   ```
+
 ## 🛠️ Tech Stack
 
 | Component | Technology | Purpose |
