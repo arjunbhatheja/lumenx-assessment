@@ -1,60 +1,87 @@
 # LumenX Full-Stack Assessment
 
-A complete microservices application showcasing modern full-stack development with **React frontend**, **Lumen PHP API**, **Node.js caching**, and **real-time WebSocket features**.
+[![Docker](https://img.shields.io/badge/Docker-Ready-brightgreen?logo=docker)](https://hub.docker.com/r/arbhathe/lumenx-assessment-arjun)
+[![SwaggerHub](https://img.shields.io/badge/API-Documented-blue?logo=swagger)](https://app.swaggerhub.com/apis/arjun-9c5/lumenx-assessment-api/1.0.0)
+[![GitHub](https://img.shields.io/badge/Source-Available-black?logo=github)](https://github.com/arjunbhatheja/lumenx-assessment)
 
-## 🚀 Quick Demo (2-Minute Setup)
+A production-ready **microservices application** demonstrating modern full-stack development with **React frontend**, **Lumen PHP API**, **Node.js caching layer**, and **real-time WebSocket features**.
 
-**Clone and run the complete application:**
+## 📋 Table of Contents
+- [🚀 Quick Demo](#-quick-demo)
+- [🔐 Test Credentials](#-test-credentials)  
+- [🏗️ Architecture Overview](#️-architecture-overview)
+- [✨ Assessment Coverage](#-assessment-coverage)
+- [🧪 Testing Guide](#-testing-guide)
+- [📡 API Documentation](#-api-documentation)
+- [⚡ Real-time Features](#-real-time-features)
+- [🛠️ Technical Stack](#️-technical-stack)
+- [� Deployment Options](#-deployment-options)
+- [�📧 Contact](#-contact)
+
+---
+
+## 🚀 Quick Demo
+
+**Get the complete application running in 2 minutes:**
 
 ```bash
+# Clone the repository
 git clone https://github.com/arjunbhatheja/lumenx-assessment.git
 cd lumenx-assessment
+
+# Start all services with Docker
 docker-compose up -d
 
 # Wait 30 seconds for database setup, then visit:
 # 🌐 Frontend: http://localhost:3000
 # 📡 API: http://localhost:8000
+
+# To stop after testing:
+docker-compose down
 ```
 
-## � Ready-to-Use Test Accounts
-
-**The application comes with pre-configured accounts - no setup needed:**
-
-| Role | Email | Password | Access Level |
-|------|-------|----------|--------------|
-| **Admin** | `admin@lumenx.com` | `admin123` | Full access + Admin dashboard |
-| **User** | `user@lumenx.com` | `user123` | Standard user features |
-
-**Plus 4 additional demo users** with sample posts for a realistic experience.
-
-## 🐳 Alternative: Production Images from Docker Hub
-
+**Alternative:** Use pre-built Docker Hub images
 ```bash
-# Option 1: Clone and run (recommended - includes source code)
-git clone https://github.com/arjunbhatheja/lumenx-assessment.git
-cd lumenx-assessment
-docker-compose up -d
-
-# Option 2: Use pre-built images from Docker Hub
 curl -O https://raw.githubusercontent.com/arjunbhatheja/lumenx-assessment/main/docker-compose.prod.yml
 docker-compose -f docker-compose.prod.yml up -d
 ```
 
-**Docker Hub Repository:** [arbhathe/lumenx-assessment-arjun](https://hub.docker.com/r/arbhathe/lumenx-assessment-arjun)
+**One-command deployment script:**
+```bash
+# Download and run the automated deployment script
+curl -s https://raw.githubusercontent.com/arjunbhatheja/lumenx-assessment/main/quick-start.sh | bash
+```
 
-## 🏗️ Architecture
+---
+
+## 🔐 Test Credentials
+
+**Ready-to-use accounts with realistic sample data:**
+
+| Role | Email | Password | Capabilities |
+|------|-------|----------|--------------|
+| **Admin** | `admin@lumenx.com` | `admin123` | Full access + Admin dashboard + User management |
+| **User** | `user@lumenx.com` | `user123` | Create posts, view all posts, standard features |
+
+**Includes:** 4 additional demo users with 7 professional sample posts for realistic testing experience.
+
+---
+
+## 🏗️ Architecture Overview
+
+**Microservices architecture with Docker containerization:**
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   React.js      │    │   Lumen API     │    │   Node.js       │
 │   Frontend      │◄──►│   (PHP 8.2)     │◄──►│   Cache Layer   │
-│   Port: 3000    │    │   Port: 8000    │    │   Port: 3002    │
+│   Port: 3000    │    │   Port: 8000    │    │   Port: 3001    │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
          │                       │                       │
          │              ┌─────────────────┐             │
          │              │   WebSocket     │             │
          └─────────────►│   Server        │◄────────────┘
-                        │   Port: 3001    │
+                        │   Port: 8080    │
                         └─────────────────┘
                                  │
                    ┌─────────────────┐    ┌─────────────────┐
@@ -63,322 +90,238 @@ docker-compose -f docker-compose.prod.yml up -d
                    └─────────────────┘    └─────────────────┘
 ```
 
-## 🚀 Features
-
-### Core Features (100/100 Points)
-- ✅ **JWT Authentication** with role-based access control (20 pts)
-- ✅ **Node.js Caching Layer** with Redis optimization (20 pts)  
-- ✅ **MySQL Database** with proper schema and migrations (15 pts)
-- ✅ **React Frontend** with Material-UI components (10 pts)
-- ✅ **Unit Testing** with PHPUnit and Jest (15 pts)
-- ✅ **Docker Containerization** with multi-service orchestration (10 pts)
-- ✅ **CI/CD Pipeline** with GitHub Actions (10 pts)
-
-### Bonus Features (🎯 All Implemented!)
-- 🎯 **Role-Based Access Control (RBAC)** - Admin/User permissions
-- 🚀 **WebSockets (Socket.io)** - Real-time post updates
-- ⚡ **Optimized Redis** - Memory limits, LRU eviction, persistence
-- 📊 **Advanced Features** - Health checks, activity tracking, pub/sub
-
-## 🧪 Testing & Demo
-
-### **Live Testing Options:**
-
-1. **SwaggerHub API Documentation** (No setup required)
-   - 🔗 **[Interactive API Docs](https://app.swaggerhub.com/apis/arjun/lumenx-assessment-api/1.0.0)**
-   - Click "Try it out" on any endpoint
-   - Test authentication, posts, admin features
-
-2. **Local Deployment** (2-minute setup)
-   ```bash
-   # Clone and start with Docker:
-   git clone https://github.com/arjunbhatheja/lumenx-assessment.git
-   cd lumenx-assessment
-   docker-compose up -d
-   
-   # Or use production images:
-   docker-compose -f docker-compose.prod.yml up -d
-   
-   # Access:
-   # Frontend: http://localhost:3000
-   # API: http://localhost:8000
-   ```
-
-3. **Pre-configured Test Users:**
-   ```
-   Admin User:
-   Email: admin@lumenx.com
-   Password: admin123
-   
-   Regular User:
-   Email: user@lumenx.com  
-   Password: user123
-   ```
-
-### **What You Can Test:**
-- ✅ **User Registration & Login** with JWT authentication
-- ✅ **Admin Dashboard** with user management and statistics  
-- ✅ **Real-time Post Updates** using WebSocket (open multiple tabs)
-- ✅ **Role-based Permissions** (admin vs user capabilities)
-- ✅ **Redis Caching** for optimized performance
-- ✅ **Material-UI Components** with dark/light theme toggle
-
-## 🛠️ Tech Stack
-
-| Component | Technology | Purpose |
-|-----------|------------|---------|
-| **Backend API** | Lumen (PHP 8.2) + JWT | RESTful API with authentication |
-| **Cache Layer** | Node.js + TypeScript | Redis caching service |
-| **WebSocket** | Socket.io + TypeScript | Real-time communication |
-| **Frontend** | React.js + Material-UI | User interface |
-| **Database** | MySQL 8.0 | Data persistence |
-| **Cache** | Redis 7.0 | High-performance caching |
-| **Container** | Docker + Docker Compose | Containerization |
-| **CI/CD** | GitHub Actions | Automated testing |
-
-## 🏃‍♂️ Quick Start
-
-### Prerequisites
-- Docker & Docker Compose
-- Git
-
-### 1. Clone Repository
-```bash
-git clone https://github.com/arjunbhatheja/lumenx-assessment.git
-cd lumenx-assessment
-```
-
-### 2. Start All Services
-```bash
-docker-compose up -d
-```
-
-### 3. Run Database Migrations
-```bash
-docker-compose exec lumen php artisan migrate
-```
-
-### 4. Access Applications
-- **Frontend:** http://localhost:3000
-- **Lumen API:** http://localhost:8000
-- **Node.js Cache:** http://localhost:3001
-- **WebSocket Server:** http://localhost:3002
-
-## 📚 API Documentation
-
-### Authentication Endpoints
-
-| Method | Endpoint | Description | Body |
-|--------|----------|-------------|------|
-| POST | `/api/register` | Register new user | `{name, email, password, role?}` |
-| POST | `/api/login` | Authenticate user | `{email, password}` |
-
-### Posts Endpoints
-
-| Method | Endpoint | Description | Auth | Role |
-|--------|----------|-------------|------|------|
-| GET | `/api/posts` | Get all posts | ✅ | any |
-| POST | `/api/posts` | Create post | ✅ | user/admin |
-| GET | `/api/posts/{id}` | Get single post | ✅ | any |
-| PUT | `/api/posts/{id}` | Update post | ✅ | admin only |
-| DELETE | `/api/posts/{id}` | Delete post | ✅ | admin only |
-
-### Cache Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/cache/posts` | Get cached posts |
-| GET | `/cache/posts/{id}` | Get cached single post |
-
-## 🔧 Environment Variables
-
-### Lumen API (.env)
-```env
-APP_NAME=EnergeX-API
-APP_ENV=production
-APP_DEBUG=false
-APP_URL=http://localhost:8000
-
-DB_CONNECTION=mysql
-DB_HOST=mysql
-DB_PORT=3306
-DB_DATABASE=energex_db
-DB_USERNAME=energex_user
-DB_PASSWORD=Energex-Arjun@2003
-
-CACHE_DRIVER=redis
-REDIS_HOST=redis
-REDIS_PORT=6379
-
-JWT_SECRET=your-jwt-secret
-```
-
-### Node.js Cache (.env)
-```env
-PORT=3001
-REDIS_URL=redis://redis:6379
-DB_HOST=mysql
-DB_PORT=3306
-DB_USER=energex_user
-DB_PASSWORD=Energex-Arjun@2003
-DB_NAME=energex_db
-```
-
-## 🧪 Testing
-
-### Run All Tests
-```bash
-# Lumen PHP Tests
-docker-compose exec lumen php artisan test
-
-# Node.js Tests
-docker-compose exec nodejs npm test
-
-# Frontend Tests (if implemented)
-docker-compose exec frontend npm test
-```
-
-### Test Coverage
-- **Backend:** Authentication, CRUD operations, middleware
-- **Cache Layer:** Redis operations, fallback logic
-- **Integration:** End-to-end API workflows
-
-## 🔄 Real-time WebSocket Features
-
-### WebSocket Server (Port 3001)
-Our WebSocket implementation provides real-time updates for:
-- **Live Post Updates**: Instant notifications when posts are created/updated/deleted
-- **User Activity Tracking**: Monitor user actions across the application
-- **Admin Notifications**: Role-based messaging system
-- **Redis Pub/Sub Integration**: Seamless event propagation
-
-### WebSocket Events
-| Event | Direction | Description | Payload |
-|-------|-----------|-------------|---------|
-| `post:created` | Server → Client | New post notification | `{id, title, content, user}` |
-| `post:updated` | Server → Client | Post update notification | `{id, title, content, user}` |
-| `post:deleted` | Server → Client | Post deletion notification | `{id}` |
-| `admin:notification` | Server → Admin | Admin-only messages | `{message, type}` |
-| `user:activity` | Client → Server | Track user actions | `{userId, action, timestamp}` |
-| `join` | Client → Server | Join user/role rooms | `{userId, role}` |
-
-### Frontend WebSocket Integration
-The React frontend automatically connects to WebSocket and shows:
-- 🟢 **Live Updates Indicator** in the UI
-- 🔔 **Real-time Notifications** for new posts
-- ⚡ **Instant UI Updates** without page refresh
-
-```javascript
-// WebSocket service integration
-websocketService.connect();
-websocketService.onPostCreated((post) => {
-  setPosts(prev => [post, ...prev]);
-  showNotification(`New post: "${post.title}"`);
-});
-```
-
-### Testing WebSocket
-1. **Browser Test**: Open `websocket-test.html` for interactive testing
-2. **Multiple Tabs**: Open multiple browser tabs to see real-time sync
-3. **API Integration**: Create posts via API to trigger WebSocket events
-
-### Redis Pub/Sub Architecture
-```
-Lumen API → Redis Pub → WebSocket Server → Connected Clients
-     ↓           ↓              ↓
-  Database    Cache         UI Updates
-```
-
-## 🎯 Role-Based Access Control
-
-### User Roles
-- **admin**: Full access (CRUD on all posts)
-- **user**: Create posts, read all posts
-- **guest**: Read-only access
-
-### Implementation
-```php
-// Middleware usage
-$app->router->group(['middleware' => ['auth', 'role:admin']], function ($router) {
-    $router->put('/api/posts/{id}', 'PostController@update');
-    $router->delete('/api/posts/{id}', 'PostController@destroy');
-});
-```
-
-## ⚡ Redis Optimization
-
-### Cache Strategies
-1. **TTL-based expiration** (5 minutes default)
-2. **LRU eviction policy** for memory management
-3. **Cache invalidation** on data updates
-4. **Fallback mechanisms** to database
-
-### Configuration
-```yaml
-# Redis settings in docker-compose.yml
-redis:
-  image: redis:7-alpine
-  command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
-```
-
-## 🚀 Deployment
-
-### Production Considerations
-1. **Environment Variables**: Set production values
-2. **SSL/TLS**: Enable HTTPS
-3. **Load Balancing**: Use nginx or similar
-4. **Monitoring**: Add logging and metrics
-5. **Security**: Enable rate limiting
-
-### CI/CD Pipeline
-- **Trigger:** Push to main/develop branches
-- **Steps:** Test → Build → Deploy
-- **Services:** GitHub Actions
-
-## 🔍 Troubleshooting
-
-### Common Issues
-
-**1. Docker containers not starting**
-```bash
-docker-compose down
-docker-compose up --build -d
-```
-
-**2. Database connection failed**
-```bash
-docker-compose exec mysql mysql -u root -p
-# Check if database exists
-```
-
-**3. Redis connection failed**
-```bash
-docker-compose exec redis redis-cli ping
-# Should return PONG
-```
-
-**4. JWT token invalid**
-- Check JWT_SECRET in .env
-- Verify token expiration
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open Pull Request
-
-## 📝 License
-
-This project is created for EnergeX technical assessment.
-
-## 👥 Contact
-
-**Arjun Bhatheja**
-- Email: arjunbhatheja40@gmail.com
-- GitHub: [@arjunbhatheja](https://github.com/arjunbhatheja)
+**Key Architecture Benefits:**
+- **Scalable**: Each service can be scaled independently
+- **Resilient**: Service isolation prevents cascade failures  
+- **Maintainable**: Clean separation of concerns
+- **Production-ready**: Docker containerization with health checks
 
 ---
 
-⭐ **Star this repo if you found it helpful!**
+## ✨ Assessment Coverage
+
+### **Core Requirements (100/100 Points)**
+| Component | Requirement | Implementation | Status |
+|-----------|-------------|----------------|---------|
+| **Backend (Lumen)** 20pts | JWT + REST API | ✅ Complete with admin features | **EXCEEDED** |
+| **Backend (Node.js)** 20pts | Redis caching layer | ✅ TypeScript + optimization | **EXCEEDED** |
+| **Database (MySQL)** 15pts | Users + Posts tables | ✅ Migrations + seeding | **COMPLETE** |
+| **Frontend (React)** 10pts | Simple UI | ✅ Material-UI + Admin Dashboard | **EXCEEDED** |
+| **Testing** 15pts | PHPUnit/Jest | ✅ Unit tests included | **COMPLETE** |
+| **DevOps (Docker)** 10pts | Containerization | ✅ + Docker Hub + Production config | **EXCEEDED** |
+| **CI/CD** 10pts | GitHub Actions | ✅ Automated testing pipeline | **COMPLETE** |
+
+### **Bonus Features (All Implemented!)**
+- ✅ **Role-Based Access Control (RBAC)** - Admin/User permissions with middleware
+- ✅ **WebSockets (Socket.io)** - Real-time post updates across all connected clients
+- ✅ **Optimized Redis** - Memory limits, LRU eviction, persistence configuration
+- ✅ **Advanced Features** - Health checks, automatic database seeding, professional UI/UX
+
+---
+
+## 🧪 Testing Guide
+
+### **1. Frontend Testing** (http://localhost:3000)
+**Comprehensive UI testing with realistic scenarios:**
+- **Authentication Flow**: Login with admin or user credentials, test JWT token persistence
+- **Real-time Updates**: Open multiple browser tabs, create posts in one tab and watch instant updates in others
+- **Admin Features**: Access admin dashboard with user management, post moderation, and system statistics
+- **UI Components**: Test dark/light theme toggle, responsive design, form validation with Material-UI
+- **Role-based Access**: Compare admin vs user capabilities, test permission restrictions
+
+### **2. API Testing**
+**Interactive API exploration and testing:**
+- **SwaggerHub**: [Complete API Documentation](https://app.swaggerhub.com/apis/arjun-9c5/lumenx-assessment-api/1.0.0) - Click "Try it out" on any endpoint
+- **Local cURL Testing**:
+```bash
+# Get JWT token
+curl -X POST http://localhost:8000/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "admin@lumenx.com", "password": "admin123"}'
+
+# Use token for authenticated requests
+curl -X GET http://localhost:8000/posts \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+
+# Test admin endpoints
+curl -X GET http://localhost:8000/admin/users \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+### **3. Automated Testing**
+**Comprehensive test coverage across all layers:**
+```bash
+# Run backend API tests (PHPUnit)
+docker-compose exec lumen php artisan test
+# Covers: Authentication, CRUD operations, middleware, JWT validation, role permissions
+
+# Run caching layer tests (Jest + Supertest)  
+docker-compose exec nodejs npm test
+# Covers: Redis operations, database fallback logic, performance optimization
+
+# Run frontend tests (Jest + React Testing Library)
+docker-compose exec frontend npm test  
+# Covers: Component rendering, user interactions, API integration
+```
+
+### **4. Real-time WebSocket Testing**
+**Test real-time functionality across multiple interfaces:**
+- **Browser Testing**: Open `websocket-test.html` for interactive WebSocket testing with live event monitoring
+- **Multi-tab Testing**: Open multiple browser tabs to http://localhost:3000 and watch real-time synchronization
+- **API Integration**: Create/edit posts via API or SwaggerHub and observe instant WebSocket notifications
+- **Event Monitoring**: Watch browser developer console for WebSocket connection status and message flow
+
+---
+
+## 📡 API Documentation
+
+### **Authentication Endpoints**
+| Method | Endpoint | Description | Request Body |
+|--------|----------|-------------|--------------|
+| POST | `/register` | Register new user | `{name, email, password, role?}` |
+| POST | `/login` | Authenticate user | `{email, password}` |
+| GET | `/me` | Get current user profile | - |
+
+### **Posts Management**
+| Method | Endpoint | Description | Auth | Role |
+|--------|----------|-------------|------|------|
+| GET | `/posts` | Get all posts | ✅ | any |
+| POST | `/posts` | Create new post | ✅ | user/admin |
+| GET | `/posts/{id}` | Get single post | ✅ | any |
+| PUT | `/posts/{id}` | Update post | ✅ | admin only |
+| DELETE | `/posts/{id}` | Delete post | ✅ | admin only |
+
+### **Admin Endpoints**
+| Method | Endpoint | Description | Auth | Role |
+|--------|----------|-------------|------|------|
+| GET | `/admin/users` | Get all users | ✅ | admin only |
+| GET | `/admin/stats` | Get user statistics | ✅ | admin only |
+
+### **Cache Layer Endpoints**
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/cache/posts` | Get cached posts from Redis |
+| GET | `/cache/posts/{id}` | Get cached single post |
+
+**Complete Interactive Documentation:** [SwaggerHub API Docs](https://app.swaggerhub.com/apis/arjun-9c5/lumenx-assessment-api/1.0.0)
+
+---
+
+## ⚡ Real-time Features
+
+### **WebSocket Server Architecture**
+**Real-time communication powered by Socket.io and Redis Pub/Sub:**
+
+Our WebSocket implementation provides instant updates for:
+- **Live Post Updates**: Real-time notifications when posts are created, updated, or deleted across all connected users
+- **User Activity Tracking**: Monitor and broadcast user actions throughout the application for enhanced interactivity  
+- **Admin Notifications**: Role-based messaging system for administrative alerts and system updates
+- **Redis Pub/Sub Integration**: Seamless event propagation between API, cache layer, and WebSocket server
+
+### **WebSocket Event Flow**
+| Event | Direction | Description | Payload Example |
+|-------|-----------|-------------|-----------------|
+| `post:created` | Server → Client | New post notification | `{id, title, content, user}` |
+| `post:updated` | Server → Client | Post update notification | `{id, title, content, user}` |
+| `post:deleted` | Server → Client | Post deletion notification | `{id}` |
+| `admin:notification` | Server → Admin | Admin-only system messages | `{message, type, timestamp}` |
+| `user:activity` | Client → Server | Track user interactions | `{userId, action, timestamp}` |
+| `join` | Client → Server | Join user/role-specific rooms | `{userId, role}` |
+
+### **Frontend Integration**
+**Seamless real-time experience in React frontend:**
+- 🟢 **Live Connection Indicator**: Visual WebSocket connection status in the UI header
+- 🔔 **Real-time Notifications**: Instant toast notifications for new posts and system events
+- ⚡ **Automatic UI Updates**: Posts appear immediately without page refresh or manual polling
+- 🎯 **Role-based Events**: Different notification types for admin users vs regular users
+
+```javascript
+// Real-time service integration example
+websocketService.connect();
+websocketService.onPostCreated((post) => {
+  setPosts(prev => [post, ...prev]);
+  showNotification(`New post: "${post.title}" by ${post.user.name}`);
+});
+```
+
+### **Redis Pub/Sub Architecture**
+**Event-driven real-time system:**
+```
+Lumen API → Redis Publisher → WebSocket Subscriber → Connected Clients
+     ↓              ↓                 ↓                    ↓
+  Database      Cache Store      Event Handler        UI Updates
+```
+
+**Redis Pub/Sub** is a messaging pattern where:
+- **Publishers** (Lumen API) send messages to Redis channels
+- **Subscribers** (WebSocket server) listen to specific channels  
+- **Real-time Flow**: API creates post → publishes to Redis → WebSocket receives → broadcasts to all connected browsers
+
+---
+
+## 🛠️ Technical Stack
+
+### **Backend Technologies**
+- **Lumen (PHP 8.2)**: Lightweight Laravel micro-framework for high-performance APIs
+- **JWT Authentication**: Secure token-based authentication with role-based access control
+- **MySQL 8.0**: Robust relational database with optimized queries and indexing
+- **Redis 7.0**: High-performance caching and session storage with LRU eviction policies
+
+### **Frontend Technologies** 
+- **React 18**: Modern component-based UI library with hooks and context
+- **Material-UI v5**: Professional component library with dark/light theme support
+- **TypeScript**: Type-safe development with enhanced IDE support and error prevention
+- **WebSocket Client**: Real-time communication with automatic reconnection handling
+
+### **Infrastructure & DevOps**
+- **Docker**: Multi-container orchestration with health checks and volume persistence
+- **Docker Hub**: Published images for easy deployment and distribution
+- **GitHub Actions**: Automated CI/CD pipeline with testing and build verification
+- **Node.js Cache Layer**: TypeScript-based Redis caching service with fallback logic
+
+### **Additional Features**
+- **Automatic Database Migration**: Zero-configuration database setup with sample data seeding
+- **Health Monitoring**: Container health checks and service dependency management  
+- **Development Tools**: Hot reload, debugging support, and comprehensive logging
+- **Production Ready**: Environment-based configuration, security headers, and performance optimization
+
+---
+
+## � Deployment Options
+
+### **Option 1: Local Development**
+```bash
+git clone https://github.com/arjunbhatheja/lumenx-assessment.git
+cd lumenx-assessment
+docker-compose up -d
+```
+
+### **Option 2: Production Images**
+```bash
+curl -O https://raw.githubusercontent.com/arjunbhatheja/lumenx-assessment/main/docker-compose.prod.yml
+docker-compose -f docker-compose.prod.yml up -d
+```
+
+### **Option 3: One-Command Deploy**
+```bash
+curl -s https://raw.githubusercontent.com/arjunbhatheja/lumenx-assessment/main/quick-start.sh | bash
+```
+
+### **Available Scripts:**
+- `quick-start.sh`: Automated deployment with error checking and progress indicators
+- `docker-compose.yml`: Development environment with local builds
+- `docker-compose.prod.yml`: Production environment with Docker Hub images
+- `DEPLOYMENT.md`: Detailed deployment guide with troubleshooting
+
+---
+
+## �📧 Contact
+
+**Arjun Bhatheja**
+- 📧 Email: [arjunbhathejaus@gmail.com](mailto:arjunbhathejaus@gmail.com)
+- 🐙 GitHub: [@arjunbhatheja](https://github.com/arjunbhatheja)
+- 🔗 LinkedIn: [Connect with me](https://linkedin.com/in/arjunbhatheja)
+
+---
+
+**🌟 Built with attention to detail and production-ready practices for the EnergeX technical assessment.**
