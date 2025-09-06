@@ -54,11 +54,15 @@ if [ $? -eq 0 ]; then
     echo "⏳ Waiting for services to initialize (database, migrations, seeders)..."
     
     # Wait for backend API to be ready
-    echo "🔄 Checking API readiness..."
+    echo "🔄 Checking API readiness (this may take 30-60 seconds)..."
     for i in {1..60}; do
         if curl -s http://localhost:8000/ >/dev/null 2>&1; then
             echo "✅ API is ready!"
             break
+        fi
+        # Show progress every 10 seconds
+        if [ $((i % 10)) -eq 0 ]; then
+            echo "   ⏳ Still waiting... ($i/60 seconds)"
         fi
         if [ $i -eq 60 ]; then
             echo "⚠️  API took longer than expected, but continuing..."
