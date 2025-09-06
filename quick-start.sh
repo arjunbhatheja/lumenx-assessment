@@ -50,6 +50,23 @@ docker-compose -f docker-compose.prod.yml up -d
 
 if [ $? -eq 0 ]; then
     echo ""
+    echo "🎉 Containers started successfully!"
+    echo "⏳ Waiting for services to initialize (database, migrations, seeders)..."
+    
+    # Wait for backend API to be ready
+    echo "🔄 Checking API readiness..."
+    for i in {1..60}; do
+        if curl -s http://localhost:8000/ >/dev/null 2>&1; then
+            echo "✅ API is ready!"
+            break
+        fi
+        if [ $i -eq 60 ]; then
+            echo "⚠️  API took longer than expected, but continuing..."
+        fi
+        sleep 1
+    done
+    
+    echo ""
     echo "🎉 SUCCESS! Application is running:"
     echo "   Frontend:  http://localhost:3000"
     echo "   API:       http://localhost:8000"
