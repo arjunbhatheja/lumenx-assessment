@@ -11,6 +11,22 @@ fi
 
 echo "✅ Docker is running"
 
+# Clean up any existing containers to avoid conflicts
+echo "🧹 Cleaning up existing Docker containers..."
+docker-compose -f docker-compose.prod.yml down 2>/dev/null || true
+docker container prune -f 2>/dev/null || true
+
+# Stop containers on specific ports that might conflict
+echo "🔄 Stopping containers on conflicting ports..."
+docker ps -q --filter "publish=3000" | xargs -r docker stop 2>/dev/null || true
+docker ps -q --filter "publish=3001" | xargs -r docker stop 2>/dev/null || true  
+docker ps -q --filter "publish=3002" | xargs -r docker stop 2>/dev/null || true
+docker ps -q --filter "publish=8000" | xargs -r docker stop 2>/dev/null || true
+docker ps -q --filter "publish=3306" | xargs -r docker stop 2>/dev/null || true
+docker ps -q --filter "publish=6379" | xargs -r docker stop 2>/dev/null || true
+
+echo "✅ Docker cleanup completed"
+
 # Download production docker-compose file if it doesn't exist
 if [ ! -f "docker-compose.prod.yml" ]; then
     echo "📥 Downloading production configuration..."
