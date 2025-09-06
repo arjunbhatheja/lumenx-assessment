@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   frontend:
-    image: arbhathe/lumenx-assessment-arjun:frontend-v2.0
+    image: arbhathe/lumenx-assessment-arjun:frontend-v2.1
     ports:
       - "3000:80"
     depends_on:
