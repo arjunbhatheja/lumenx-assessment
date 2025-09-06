@@ -104,8 +104,17 @@ const PostList: React.FC<PostListProps> = ({ currentUser }) => {
         console.log('Post deleted:', data);
         fetchPosts();
       };
+
+      // Register WebSocket event listeners
+      websocketService.onPostCreated(handleNewPost);
+      websocketService.onPostUpdated(handlePostUpdate);
+      websocketService.onPostDeleted(handlePostDelete);
       
       return () => {
+        // Clean up event listeners
+        websocketService.offPostCreated();
+        websocketService.offPostUpdated();
+        websocketService.offPostDeleted();
         websocketService.disconnect();
       };
     }
@@ -165,6 +174,10 @@ const PostList: React.FC<PostListProps> = ({ currentUser }) => {
   const handleDelete = async (postId: number) => {
     try {
       await postsAPI.deletePost(postId.toString());
+      
+      // Emit WebSocket event to notify all clients
+      websocketService.emitPostDeleted(postId);
+      
       setPosts(posts.filter((post) => post.id !== postId));
       setSnackbar({ open: true, message: 'Post deleted successfully', severity: 'success' });
     } catch (err: any) {

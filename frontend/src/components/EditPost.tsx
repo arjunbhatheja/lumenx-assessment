@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { postsAPI } from '../services/api';
+import { websocketService } from '../services/websocket';
 
 interface Post {
   id: number;
@@ -68,7 +69,12 @@ const EditPost: React.FC = () => {
     setError('');
 
     try {
-      await postsAPI.updatePost(id, { title, content });
+      const response = await postsAPI.updatePost(id, { title, content });
+      const updatedPost = response.data;
+      
+      // Emit WebSocket event to notify all clients
+      websocketService.emitPostUpdated(updatedPost);
+      
       navigate('/posts'); // Redirect to posts list
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to update post');

@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { postsAPI } from '../services/api';
+import { websocketService } from '../services/websocket';
 
 const CreatePost: React.FC = () => {
   const [title, setTitle] = useState('');
@@ -25,7 +26,12 @@ const CreatePost: React.FC = () => {
     setError('');
 
     try {
-      await postsAPI.createPost({ title, content });
+      const response = await postsAPI.createPost({ title, content });
+      const newPost = response.data;
+      
+      // Emit WebSocket event to notify all clients
+      websocketService.emitPostCreated(newPost);
+      
       navigate('/posts'); // Redirect to posts list
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to create post');
