@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const LUMEN_API_BASE = 'http://localhost:8000/api';
-const CACHE_API_BASE = 'http://localhost:3001/cache';
+const CACHE_API_BASE = 'http://localhost:3002/cache';
 
 // Lumen API instance
 const lumenAPI = axios.create({
