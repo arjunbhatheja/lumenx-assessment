@@ -1,6 +1,6 @@
 services:
   frontend:
-    image: arbhathe/lumenx-assessment-arjun:frontend-v2.3
+    image: arbhathe/lumenx-assessment-arjun:frontend-v2.4
     ports:
       - "3000:80"
     depends_on:

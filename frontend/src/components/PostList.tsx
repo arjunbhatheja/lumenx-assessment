@@ -90,19 +90,28 @@ const PostList: React.FC<PostListProps> = ({ currentUser }) => {
       websocketService.connect();
       setConnected(true);
 
-      const handleNewPost = (data: any) => {
-        console.log('New post received:', data);
-        fetchPosts();
+      const handleNewPost = (newPost: any) => {
+        console.log('New post received:', newPost);
+        setPosts(prevPosts => [newPost, ...prevPosts]); // Add to top of list
+        setSnackbar({ open: true, message: 'New post added!', severity: 'success' });
       };
 
-      const handlePostUpdate = (data: any) => {
-        console.log('Post updated:', data);
-        fetchPosts();
+      const handlePostUpdate = (updatedPost: any) => {
+        console.log('Post updated:', updatedPost);
+        setPosts(prevPosts => 
+          prevPosts.map(post => 
+            post.id === updatedPost.id ? updatedPost : post
+          )
+        );
+        setSnackbar({ open: true, message: 'Post updated!', severity: 'success' });
       };
 
       const handlePostDelete = (data: any) => {
         console.log('Post deleted:', data);
-        fetchPosts();
+        setPosts(prevPosts => 
+          prevPosts.filter(post => post.id !== data.id)
+        );
+        setSnackbar({ open: true, message: 'Post deleted!', severity: 'success' });
       };
 
       // Register WebSocket event listeners
@@ -174,9 +183,8 @@ const PostList: React.FC<PostListProps> = ({ currentUser }) => {
   const handleDelete = async (postId: number) => {
     try {
       await postsAPI.deletePost(postId.toString());
-      
-      // Emit WebSocket event to notify all clients
-      websocketService.emitPostDeleted(postId);
+      // Backend will publish to Redis/WebSocket automatically
+      // No need to emit WebSocket event manually
       
       setPosts(posts.filter((post) => post.id !== postId));
       setSnackbar({ open: true, message: 'Post deleted successfully', severity: 'success' });

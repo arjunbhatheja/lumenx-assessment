@@ -27,10 +27,8 @@ const CreatePost: React.FC = () => {
 
     try {
       const response = await postsAPI.createPost({ title, content });
-      const newPost = response.data;
-      
-      // Emit WebSocket event to notify all clients
-      websocketService.emitPostCreated(newPost);
+      // Backend will publish to Redis/WebSocket automatically
+      // No need to emit WebSocket event manually
       
       navigate('/posts'); // Redirect to posts list
     } catch (err: any) {

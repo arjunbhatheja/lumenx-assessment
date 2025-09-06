@@ -70,10 +70,8 @@ const EditPost: React.FC = () => {
 
     try {
       const response = await postsAPI.updatePost(id, { title, content });
-      const updatedPost = response.data;
-      
-      // Emit WebSocket event to notify all clients
-      websocketService.emitPostUpdated(updatedPost);
+      // Backend will publish to Redis/WebSocket automatically
+      // No need to emit WebSocket event manually
       
       navigate('/posts'); // Redirect to posts list
     } catch (err: any) {
