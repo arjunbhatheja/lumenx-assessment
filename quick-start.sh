@@ -27,6 +27,10 @@ docker ps -q --filter "publish=6379" | xargs -r docker stop 2>/dev/null || true
 
 echo "✅ Docker cleanup completed"
 
+# Clean up any orphaned volumes
+echo "🗑️  Cleaning up Docker volumes..."
+docker volume prune -f 2>/dev/null || true
+
 # Download production docker-compose file if it doesn't exist
 if [ ! -f "docker-compose.prod.yml" ]; then
     echo "📥 Downloading production configuration..."
@@ -56,6 +60,21 @@ if [ $? -eq 0 ]; then
     echo "📋 Test Credentials:"
     echo "   Admin: admin@lumenx.com / admin123"
     echo "   User:  user@lumenx.com / user123"
+    echo ""
+    echo "🌐 Opening application in your default browser..."
+
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS
+        open http://localhost:3000 2>/dev/null || true
+    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        # Linux
+        xdg-open http://localhost:3000 2>/dev/null || true
+    elif [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
+        # Windows
+        start http://localhost:3000 2>/dev/null || true
+    fi
+    
+    echo "🎯 If browser didn't open automatically, visit: http://localhost:3000"
     echo ""
     echo "� To view logs: docker-compose -f docker-compose.prod.yml logs -f"
     echo "� To stop: docker-compose -f docker-compose.prod.yml down"
