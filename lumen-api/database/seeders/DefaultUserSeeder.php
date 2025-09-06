@@ -27,6 +27,12 @@ class DefaultUserSeeder extends Seeder
         // Create sample users
         $users = [
             [
+                'name' => 'User One',
+                'email' => 'user@lumenx.com',
+                'password' => Hash::make('user123'),
+                'role' => 'user'
+            ],
+            [
                 'name' => 'Sarah Johnson',
                 'email' => 'sarah@example.com',
                 'password' => Hash::make('user123'),
