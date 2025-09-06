@@ -75,13 +75,13 @@ curl -s https://raw.githubusercontent.com/arjunbhatheja/lumenx-assessment/main/q
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   React.js      │    │   Lumen API     │    │   Node.js       │
 │   Frontend      │◄──►│   (PHP 8.2)     │◄──►│   Cache Layer   │
-│   Port: 3000    │    │   Port: 8000    │    │   Port: 3001    │
+│   Port: 3000    │    │   Port: 8000    │    │   Port: 3002    │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
          │                       │                       │
          │              ┌─────────────────┐             │
          │              │   WebSocket     │             │
          └─────────────►│   Server        │◄────────────┘
-                        │   Port: 8080    │
+                        │   Port: 3001    │
                         └─────────────────┘
                                  │
                    ┌─────────────────┐    ┌─────────────────┐

@@ -6,11 +6,11 @@ services:
     ports:
       - "3000:80"
     depends_on:
-      - backend
+      - lumen
     networks:
       - lumenx-network
 
-  backend:
+  lumen:
     image: arbhathe/lumenx-assessment-arjun:backend-v2.0
     ports:
       - "8000:8000"
@@ -18,9 +18,9 @@ services:
       - APP_ENV=production
       - APP_DEBUG=false
       - DB_HOST=mysql
-      - DB_DATABASE=lumenx
-      - DB_USERNAME=lumenx
-      - DB_PASSWORD=lumenx_secure_password
+      - DB_DATABASE=energex_db
+      - DB_USERNAME=root
+      - DB_PASSWORD=Energex-Arjun@2003
       - REDIS_HOST=redis
       - JWT_SECRET=your-production-jwt-secret-change-this
     depends_on:
@@ -29,13 +29,16 @@ services:
     networks:
       - lumenx-network
 
-  cache:
+  nodejs:
     image: arbhathe/lumenx-assessment-arjun:cache-v2.0
     ports:
-      - "3001:3000"
+      - "3002:3001"
     environment:
-      - REDIS_URL=redis://redis:6379
+      - MYSQL_HOST=mysql
+      - MYSQL_PASSWORD=Energex-Arjun@2003
+      - REDIS_HOST=redis
     depends_on:
+      - mysql
       - redis
     networks:
       - lumenx-network
@@ -43,9 +46,12 @@ services:
   websocket:
     image: arbhathe/lumenx-assessment-arjun:websocket-v2.0
     ports:
-      - "8080:8080"
+      - "3001:3001"
     environment:
       - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - FRONTEND_URL=http://localhost:3000
+      - PORT=3001
     depends_on:
       - redis
     networks:
@@ -54,23 +60,28 @@ services:
   mysql:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: lumenx
-      MYSQL_USER: lumenx
-      MYSQL_PASSWORD: lumenx_secure_password
+      MYSQL_ROOT_PASSWORD: Energex-Arjun@2003
+      MYSQL_DATABASE: energex_db
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
     networks:
       - lumenx-network
 
   redis:
-    image: redis:7-alpine
+    image: redis:alpine
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    environment:
+      - REDIS_PASSWORD=""
     networks:
       - lumenx-network
 

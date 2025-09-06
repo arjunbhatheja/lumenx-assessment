@@ -33,16 +33,16 @@ if [ $? -eq 0 ]; then
     echo "🎉 SUCCESS! Application is running:"
     echo "   Frontend:  http://localhost:3000"
     echo "   API:       http://localhost:8000"
-    echo "   WebSocket: http://localhost:8080"
-    echo "   API Docs:  https://app.swaggerhub.com/apis/arjun/lumenx-assessment-api/1.0.0"
+    echo "   Cache:     http://localhost:3002"
+    echo "   WebSocket: http://localhost:3001"
+    echo "   API Docs:  https://app.swaggerhub.com/apis/arjun-9c5/lumenx-assessment-api/1.0.0"
     echo ""
-    echo "📋 To view logs: docker-compose -f docker-compose.prod.yml logs -f"
-    echo "🛑 To stop: docker-compose -f docker-compose.prod.yml down"
+    echo "📋 Test Credentials:"
+    echo "   Admin: admin@lumenx.com / admin123"
+    echo "   User:  user@lumenx.com / user123"
     echo ""
-    echo "🔐 Create an admin user:"
-    echo '   curl -X POST http://localhost:8000/register \'
-    echo '     -H "Content-Type: application/json" \'
-    echo '     -d '"'"'{"name":"Admin","email":"admin@test.com","password":"admin123","role":"admin"}'"'"
+    echo "� To view logs: docker-compose -f docker-compose.prod.yml logs -f"
+    echo "� To stop: docker-compose -f docker-compose.prod.yml down"
 else
     echo "❌ Failed to start services"
     exit 1
